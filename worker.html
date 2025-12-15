@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Панель работника</title>
+  <link rel="stylesheet" href="styles.css"/>
+
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+</head>
+<body>
+
+<header class="navbar">
+  <div class="nav-left">
+    <h1 style="font-size:16px;">Панель работника</h1>
+    <span class="muted" style="color:#e5e7eb;">Заказы / статусы / комментарии</span>
+  </div>
+
+  <div class="nav-right">
+    <button class="nav-button" onclick="goHome()">
+      <i class="fa-solid fa-house"></i><span class="btn-text">Главная</span>
+    </button>
+    <button class="nav-button nav-button-dark" onclick="logoutWorker()">
+      <i class="fa-solid fa-right-from-bracket"></i><span class="btn-text">Выход</span>
+    </button>
+  </div>
+</header>
+
+<section class="worker-section">
+  <div class="section-head" style="padding:0;">
+    <h2>Активные заказы</h2>
+    <p class="section-subtitle">Работник может брать заказ в работу, завершать и оставлять комментарий</p>
+  </div>
+
+  <div class="order-card" style="max-width:720px;">
+    <p style="font-weight:800;">Имя работника (для отметки)</p>
+    <div class="grid-2">
+      <input id="workerName" type="text" placeholder="Например: Aziz / Javohir / Rustam" />
+      <button class="primary" onclick="saveWorkerName()">Сохранить</button>
+    </div>
+    <p class="muted" style="margin-top:8px;">Имя будет записываться в заказ при “Взять в работу”.</p>
+  </div>
+
+  <div id="worker-orders"></div>
+</section>
+
+<div id="toastRoot" class="toast-root" aria-live="polite" aria-atomic="true"></div>
+
+<script src="worker.js"></script>
+</body>
+</html>

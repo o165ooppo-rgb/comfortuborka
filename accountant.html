@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Бухгалтер</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+  <header class="navbar">
+    <div class="nav-left">
+      <h1 style="font-size:16px;">Панель бухгалтера</h1>
+    </div>
+    <div class="nav-right">
+      <button onclick="logout()" class="nav-button nav-button-dark">
+        <i class="fa-solid fa-right-from-bracket"></i><span class="btn-text">Выход</span>
+      </button>
+    </div>
+  </header>
+
+  <section class="accountant-section">
+    <h2>Добавить транзакцию</h2>
+
+    <form id="transaction-form">
+      <label>
+        Тип транзакции:
+        <select id="transaction-type">
+          <option value="income">Доход</option>
+          <option value="expense">Расход</option>
+        </select>
+      </label>
+
+      <label>
+        Сумма:
+        <input type="number" id="transaction-amount" required>
+      </label>
+
+      <label>
+        Описание:
+        <input type="text" id="transaction-description" required>
+      </label>
+
+      <button type="submit" class="primary">Добавить</button>
+    </form>
+
+    <h2>Список транзакций</h2>
+    <div id="transaction-list"></div>
+
+    <div id="transaction-summary" class="order-card" style="margin-top:14px;"></div>
+  </section>
+
+  <div id="toastRoot" class="toast-root" aria-live="polite" aria-atomic="true"></div>
+
+  <script src="accountant.js"></script>
+</body>
+</html>

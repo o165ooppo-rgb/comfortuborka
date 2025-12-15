@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Название вашей компании</title>
+  <link rel="stylesheet" href="styles.css"/>
+
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet"/>
+</head>
+<body>
+
+  <!-- Navbar -->
+  <header class="navbar">
+    <div class="nav-left">
+      <div class="social-icons">
+        <a href="https://instagram.com/yourprofile" target="_blank" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+        <a href="https://facebook.com/yourprofile" target="_blank" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+        <a href="https://t.me/komfort_uborka_samarkand" target="_blank" aria-label="Telegram"><i class="fab fa-telegram-plane"></i></a>
+      </div>
+      <h1 class="call-center">Call Center (66 99)</h1>
+    </div>
+
+    <div class="nav-center">
+      <img src="1.png" alt="Логотип" class="header-logo" />
+    </div>
+
+    <div class="nav-right">
+      <button onclick="openClientDatabase()" class="nav-button">
+        <i class="fa-solid fa-users"></i><span class="btn-text">Клиентская база</span>
+      </button>
+
+      <button onclick="openAccountant()" class="nav-button">
+        <i class="fa-solid fa-calculator"></i><span class="btn-text">Бухгалтер</span>
+      </button>
+
+      <button onclick="openWorker()" class="nav-button">
+        <i class="fa-solid fa-helmet-safety"></i><span class="btn-text">Работники</span>
+      </button>
+
+      <button onclick="openAdminLogin()" class="nav-button nav-button-dark">
+        <i class="fa-solid fa-shield-halved"></i><span class="btn-text">Директор</span>
+      </button>
+
+      <select id="language-select" onchange="changeLanguage()" aria-label="Выбор языка">
+        <option value="ru" selected>RU</option>
+        <option value="uz">UZ</option>
+        <option value="en">EN</option>
+      </select>
+    </div>
+  </header>
+
+  <!-- Services -->
+  <section class="services">
+    <div class="section-head">
+      <h2 class="section-title" id="servicesTitle">Услуги</h2>
+      <p class="section-subtitle" id="servicesSubtitle">Выберите услугу и оформите заказ за 1 минуту</p>
+    </div>
+
+    <div class="service-grid">
+      <!-- Rendered by JS -->
+    </div>
+  </section>
+
+  <!-- Service Modal -->
+  <div id="modal" class="modal" aria-hidden="true">
+    <div class="modal-content">
+      <button class="close" onclick="closeModal()" aria-label="Закрыть">&times;</button>
+
+      <div class="modal-header">
+        <h2 id="serviceTitle"></h2>
+        <p class="muted" id="serviceDescription"></p>
+      </div>
+
+      <div class="modal-row">
+        <div class="pill">
+          <span id="pricePerUnitLabel"></span>
+          <strong><span id="servicePrice"></span> Сум</strong>
+        </div>
+      </div>
+
+      <label for="squareMeters" class="label" id="quantityLabel"></label>
+      <input type="number" id="squareMeters" value="1" min="1" onchange="updateTotalPrice()" />
+
+      <div class="total-line">
+        <span class="muted"><span id="totalPriceText"></span></span>
+        <strong><span id="totalServicePrice"></span> Сум</strong>
+      </div>
+
+      <button class="primary" onclick="addToOrder()" id="addToOrderButton"></button>
+    </div>
+  </div>
+
+  <!-- Order Form Modal -->
+  <div id="orderFormModal" class="modal" aria-hidden="true">
+    <div class="modal-content">
+      <button class="close" onclick="closeOrderForm()" aria-label="Закрыть">&times;</button>
+
+      <h2 id="orderFormTitle"></h2>
+
+      <div class="order-summary">
+        <p><span class="muted"><span id="serviceLabelText"></span></span> <strong id="orderService"></strong></p>
+        <p><span class="muted"><span id="orderTotalText"></span></span> <strong id="orderTotal"></strong></p>
+      </div>
+
+      <div class="grid-2">
+        <input type="text" id="name" placeholder="" autocomplete="name"/>
+        <input type="tel" id="phone" placeholder="" autocomplete="tel"/>
+      </div>
+
+      <input type="text" id="address" placeholder="" autocomplete="street-address"/>
+
+      <div class="grid-2">
+        <input type="date" id="date"/>
+        <input type="time" id="time"/>
+      </div>
+
+      <button class="primary" onclick="confirmOrder()" id="confirmOrderButton"></button>
+    </div>
+  </div>
+
+  <!-- Order Details Modal -->
+  <div id="orderDetailsModal" class="modal" aria-hidden="true">
+    <div class="modal-content">
+      <button class="close" onclick="closeOrderDetails()" aria-label="Закрыть">&times;</button>
+
+      <h2 id="orderDetailsTitle"></h2>
+      <div class="details">
+        <p id="detailsNameLabel"></p>
+        <p id="detailsTotalLabel"></p>
+        <p id="detailsAddressLabel"></p>
+        <p id="detailsDateLabel"></p>
+        <p id="detailsTimeLabel"></p>
+        <p id="detailsServiceLabel"></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Order History -->
+  <section class="order-history-section">
+    <div class="section-head">
+      <h2 id="orderHistoryTitle"></h2>
+      <p class="section-subtitle" id="historySubtitle">Заказы автоматически удаляются через 24 часа</p>
+    </div>
+
+    <div class="order-history" id="orderHistory"></div>
+  </section>
+
+  <!-- Toast container -->
+  <div id="toastRoot" class="toast-root" aria-live="polite" aria-atomic="true"></div>
+
+  <script src="script.js"></script>
+</body>
+</html>

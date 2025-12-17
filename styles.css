@@ -562,3 +562,139 @@ body{
     height: 80px;
   }
 }
+
+
+/* ===== Accountant ===== */
+.accountant-section {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 24px 16px 60px;
+}
+
+/* KPI */
+.finance-kpi {
+  display:grid;
+  grid-template-columns: repeat(3,1fr);
+  gap:16px;
+  margin-bottom:24px;
+}
+
+.kpi-card {
+  background:white;
+  border-radius:16px;
+  padding:20px;
+  box-shadow:0 10px 25px rgba(0,0,0,.08);
+}
+
+.kpi-card h3 {
+  font-size:14px;
+  color:#64748b;
+}
+
+.kpi-card p {
+  font-size:26px;
+  font-weight:900;
+  margin-top:6px;
+}
+
+.kpi-card.income p { color:#22c55e; }
+.kpi-card.expense p { color:#ef4444; }
+.kpi-card.profit p { color:#0b66ff; }
+
+/* Filters */
+.finance-filters {
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  margin-bottom:24px;
+}
+
+.finance-filters input,
+.finance-filters select,
+.finance-filters button {
+  padding:10px 14px;
+  border-radius:12px;
+  border:1px solid rgba(0,0,0,.15);
+}
+
+.finance-filters button {
+  background:#0b66ff;
+  color:white;
+  border:none;
+  cursor:pointer;
+}
+
+.finance-filters .secondary {
+  background:#e5e7eb;
+  color:#111;
+}
+
+/* Form */
+.finance-form {
+  background:white;
+  border-radius:16px;
+  padding:20px;
+  box-shadow:0 10px 25px rgba(0,0,0,.08);
+  margin-bottom:30px;
+}
+
+.finance-form h2 {
+  margin-bottom:14px;
+}
+
+.finance-form select,
+.finance-form input,
+.finance-form button {
+  width:100%;
+  padding:12px;
+  margin-bottom:10px;
+  border-radius:12px;
+  border:1px solid rgba(0,0,0,.15);
+}
+
+.finance-form button {
+  background:#0b66ff;
+  color:white;
+  border:none;
+  font-weight:700;
+  cursor:pointer;
+}
+
+/* Chart */
+.finance-chart {
+  background:white;
+  border-radius:16px;
+  padding:20px;
+  box-shadow:0 10px 25px rgba(0,0,0,.08);
+  margin-bottom:30px;
+}
+
+/* Table */
+.finance-table table {
+  width:100%;
+  border-collapse:collapse;
+}
+
+.finance-table th,
+.finance-table td {
+  padding:12px;
+  border-bottom:1px solid #e5e7eb;
+}
+
+.finance-table td.income { color:#22c55e; font-weight:700; }
+.finance-table td.expense { color:#ef4444; font-weight:700; }
+
+.finance-table button {
+  background:none;
+  border:none;
+  color:#ef4444;
+  cursor:pointer;
+  font-size:16px;
+}
+
+/* Mobile */
+@media(max-width:768px){
+  .finance-kpi {
+    grid-template-columns:1fr;
+  }
+}

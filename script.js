@@ -18,8 +18,8 @@ const services = {
   },
   service3: {
     key: "service3",
-    title: { ru: "Квартира", uz: "Kvartira", en: "Apartment" },
-    description: { ru: "Уборка квартиры", uz: "Kvartirani tozalash", en: "Apartment cleaning" },
+    title: { ru: "Школа", uz: "Maktab", en: "School" },
+    description: { ru: "Уборка школы", uz: "Maktabni tozalash", en: "School cleaning" },
     price: 15000,
     photo: "photos/house.png",
   },

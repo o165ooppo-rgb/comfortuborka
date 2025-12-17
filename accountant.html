@@ -2,56 +2,93 @@
 <html lang="ru">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Бухгалтер</title>
+  <title>Бухгалтерия</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
   <link rel="stylesheet" href="styles.css">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
-  <header class="navbar">
-    <div class="nav-left">
-      <h1 style="font-size:16px;">Панель бухгалтера</h1>
+
+<header class="navbar">
+  <div class="nav-left">
+    <h1 style="font-size:16px;">Бухгалтерия</h1>
+    <span class="muted" style="color:#e5e7eb;">Финансовая аналитика</span>
+  </div>
+  <div class="nav-right">
+    <button class="nav-button nav-button-dark" onclick="goHome()">Главная</button>
+  </div>
+</header>
+
+<section class="accountant-section">
+
+  <!-- KPI -->
+  <div class="finance-kpi">
+    <div class="kpi-card income">
+      <h3>Доход</h3>
+      <p id="totalIncome">0</p>
     </div>
-    <div class="nav-right">
-      <button onclick="logout()" class="nav-button nav-button-dark">
-        <i class="fa-solid fa-right-from-bracket"></i><span class="btn-text">Выход</span>
-      </button>
+    <div class="kpi-card expense">
+      <h3>Расход</h3>
+      <p id="totalExpense">0</p>
     </div>
-  </header>
+    <div class="kpi-card profit">
+      <h3>Прибыль</h3>
+      <p id="totalProfit">0</p>
+    </div>
+  </div>
 
-  <section class="accountant-section">
-    <h2>Добавить транзакцию</h2>
+  <!-- Filters -->
+  <div class="finance-filters">
+    <input type="date" id="fromDate">
+    <input type="date" id="toDate">
+    <select id="typeFilter">
+      <option value="all">Все</option>
+      <option value="income">Доход</option>
+      <option value="expense">Расход</option>
+    </select>
+    <button onclick="applyFilters()">Фильтр</button>
+    <button onclick="resetFilters()" class="secondary">Сброс</button>
+  </div>
 
-    <form id="transaction-form">
-      <label>
-        Тип транзакции:
-        <select id="transaction-type">
-          <option value="income">Доход</option>
-          <option value="expense">Расход</option>
-        </select>
-      </label>
+  <!-- Add transaction -->
+  <div class="finance-form">
+    <h2>Добавить операцию</h2>
+    <select id="transactionType">
+      <option value="income">Доход</option>
+      <option value="expense">Расход</option>
+    </select>
+    <input type="number" id="amount" placeholder="Сумма">
+    <input type="text" id="description" placeholder="Описание">
+    <button onclick="addTransaction()">Добавить</button>
+  </div>
 
-      <label>
-        Сумма:
-        <input type="number" id="transaction-amount" required>
-      </label>
+  <!-- Chart -->
+  <div class="finance-chart">
+    <canvas id="financeChart"></canvas>
+  </div>
 
-      <label>
-        Описание:
-        <input type="text" id="transaction-description" required>
-      </label>
+  <!-- Table -->
+  <div class="finance-table">
+    <h2>История операций</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Дата</th>
+          <th>Тип</th>
+          <th>Сумма</th>
+          <th>Описание</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody id="transactionTable"></tbody>
+    </table>
+  </div>
 
-      <button type="submit" class="primary">Добавить</button>
-    </form>
+</section>
 
-    <h2>Список транзакций</h2>
-    <div id="transaction-list"></div>
-
-    <div id="transaction-summary" class="order-card" style="margin-top:14px;"></div>
-  </section>
-
-  <div id="toastRoot" class="toast-root" aria-live="polite" aria-atomic="true"></div>
-
-  <script src="accountant.js"></script>
+<script src="accountant.js"></script>
 </body>
 </html>

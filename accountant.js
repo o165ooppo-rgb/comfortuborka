@@ -1,119 +1,132 @@
-let transactions = [];
+let transactions = JSON.parse(localStorage.getItem("transactions")) || [];
+let chart;
 
-function showToast(type, title, text) {
-  const root = document.getElementById("toastRoot");
-  if (!root) return;
-
-  const icons = { success:"fa-circle-check", error:"fa-circle-xmark", info:"fa-circle-info" };
-  const toast = document.createElement("div");
-  toast.className = `toast ${type || "info"}`;
-  toast.innerHTML = `
-    <div class="t-icon"><i class="fa-solid ${icons[type] || icons.info}"></i></div>
-    <div>
-      <div class="t-title">${title || ""}</div>
-      <div class="t-text">${text || ""}</div>
-    </div>
-  `;
-  root.appendChild(toast);
-
-  setTimeout(() => {
-    toast.style.opacity = "0";
-    toast.style.transform = "translateY(8px)";
-    toast.style.transition = "opacity .2s ease, transform .2s ease";
-    setTimeout(() => toast.remove(), 220);
-  }, 2400);
-}
-
-window.onload = function () {
-  const saved = localStorage.getItem("transactions");
-  if (saved) transactions = JSON.parse(saved);
-
-  renderTransactions();
-
-  document.getElementById("transaction-form").addEventListener("submit", function (event) {
-    event.preventDefault();
-    addTransaction();
-  });
-};
-
-function addTransaction() {
-  const type = document.getElementById("transaction-type").value;
-  const amount = parseFloat(document.getElementById("transaction-amount").value);
-  const description = document.getElementById("transaction-description").value.trim();
-
-  if (!amount || !description) {
-    showToast("error", "Ошибка", "Заполните все поля.");
-    return;
-  }
-
-  const transaction = {
-    type,
-    amount,
-    description,
-    date: new Date().toLocaleString(),
-  };
-
-  transactions.push(transaction);
-  localStorage.setItem("transactions", JSON.stringify(transactions));
-  renderTransactions();
-
-  document.getElementById("transaction-form").reset();
-  showToast("success", "Добавлено", type === "income" ? "Доход добавлен" : "Расход добавлен");
-}
-
-function renderTransactions() {
-  const list = document.getElementById("transaction-list");
-  list.innerHTML = "";
-
-  let incomeTotal = 0;
-  let expenseTotal = 0;
-
-  if (transactions.length === 0) {
-    list.innerHTML = `<div class="order-card"><p class="muted">Нет транзакций.</p></div>`;
-    document.getElementById("transaction-summary").innerHTML = "";
-    return;
-  }
-
-  transactions.forEach((t, index) => {
-    const card = document.createElement("div");
-    card.className = "order-card";
-
-    card.innerHTML = `
-      <p><strong>${t.type === "income" ? "Доход" : "Расход"}</strong></p>
-      <p><span class="muted">Сумма:</span> <strong>${t.amount.toLocaleString("ru-RU")} Сум</strong></p>
-      <p><span class="muted">Описание:</span> <strong>${escapeHtml(t.description)}</strong></p>
-      <p class="muted">Дата: ${t.date}</p>
-      <button class="btn-red" onclick="deleteTransaction(${index})">Удалить</button>
-    `;
-
-    list.appendChild(card);
-
-    if (t.type === "income") incomeTotal += t.amount;
-    else expenseTotal += t.amount;
-  });
-
-  document.getElementById("transaction-summary").innerHTML = `
-    <h3 style="margin-bottom:8px;">Общая информация</h3>
-    <p><span class="muted">Общий доход:</span> <strong>${incomeTotal.toLocaleString("ru-RU")} Сум</strong></p>
-    <p><span class="muted">Общие расходы:</span> <strong>${expenseTotal.toLocaleString("ru-RU")} Сум</strong></p>
-    <p><span class="muted">Чистая прибыль:</span> <strong>${(incomeTotal - expenseTotal).toLocaleString("ru-RU")} Сум</strong></p>
-  `;
-}
-
-function deleteTransaction(index) {
-  if (!confirm("Удалить транзакцию?")) return;
-  transactions.splice(index, 1);
-  localStorage.setItem("transactions", JSON.stringify(transactions));
-  renderTransactions();
-  showToast("success", "Удалено", "Транзакция удалена");
-}
-
-function logout() {
+function goHome() {
   window.location.href = "index.html";
 }
 
-function escapeHtml(str){
-  return String(str).replace(/[&<>"']/g, (m) => ({
-    "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"
-  }[m]));
+function addTransaction() {
+  const type = document.getElementById("transactionType").value;
+  const amount = Number(document.getElementById("amount").value);
+  const description = document.getElementById("description").value;
+
+  if (!amount || !description) {
+    alert("Заполните все поля");
+    return;
+  }
+
+  transactions.push({
+    id: Date.now(),
+    type,
+    amount,
+    description,
+    date: new Date().toISOString().split("T")[0]
+  });
+
+  localStorage.setItem("transactions", JSON.stringify(transactions));
+  document.getElementById("amount").value = "";
+  document.getElementById("description").value = "";
+
+  render();
 }
+
+function deleteTransaction(id) {
+  transactions = transactions.filter(t => t.id !== id);
+  localStorage.setItem("transactions", JSON.stringify(transactions));
+  render();
+}
+
+function applyFilters() {
+  render(true);
+}
+
+function resetFilters() {
+  document.getElementById("fromDate").value = "";
+  document.getElementById("toDate").value = "";
+  document.getElementById("typeFilter").value = "all";
+  render();
+}
+
+function render(filtered = false) {
+  let data = [...transactions];
+
+  if (filtered) {
+    const from = document.getElementById("fromDate").value;
+    const to = document.getElementById("toDate").value;
+    const type = document.getElementById("typeFilter").value;
+
+    if (from) data = data.filter(t => t.date >= from);
+    if (to) data = data.filter(t => t.date <= to);
+    if (type !== "all") data = data.filter(t => t.type === type);
+  }
+
+  let income = 0, expense = 0;
+  data.forEach(t => {
+    t.type === "income" ? income += t.amount : expense += t.amount;
+  });
+
+  document.getElementById("totalIncome").textContent = income.toLocaleString();
+  document.getElementById("totalExpense").textContent = expense.toLocaleString();
+  document.getElementById("totalProfit").textContent = (income - expense).toLocaleString();
+
+  renderTable(data);
+  renderChart(data);
+}
+
+function renderTable(data) {
+  const table = document.getElementById("transactionTable");
+  table.innerHTML = "";
+
+  data.reverse().forEach(t => {
+    const row = document.createElement("tr");
+    row.innerHTML = `
+      <td>${t.date}</td>
+      <td class="${t.type}">${t.type === "income" ? "Доход" : "Расход"}</td>
+      <td>${t.amount.toLocaleString()}</td>
+      <td>${t.description}</td>
+      <td><button onclick="deleteTransaction(${t.id})">✖</button></td>
+    `;
+    table.appendChild(row);
+  });
+}
+
+function renderChart(data) {
+  const ctx = document.getElementById("financeChart");
+
+  const grouped = {};
+  data.forEach(t => {
+    grouped[t.date] ??= { income: 0, expense: 0 };
+    grouped[t.date][t.type] += t.amount;
+  });
+
+  const labels = Object.keys(grouped);
+  const incomeData = labels.map(d => grouped[d].income);
+  const expenseData = labels.map(d => grouped[d].expense);
+
+  if (chart) chart.destroy();
+
+  chart = new Chart(ctx, {
+    type: "line",
+    data: {
+      labels,
+      datasets: [
+        {
+          label: "Доход",
+          data: incomeData,
+          borderColor: "#22c55e",
+          backgroundColor: "rgba(34,197,94,.2)",
+          tension: .4
+        },
+        {
+          label: "Расход",
+          data: expenseData,
+          borderColor: "#ef4444",
+          backgroundColor: "rgba(239,68,68,.2)",
+          tension: .4
+        }
+      ]
+    }
+  });
+}
+
+render();

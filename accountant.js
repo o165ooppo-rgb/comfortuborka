@@ -24,7 +24,7 @@ function todayISO() {
 
 function money(n) {
   const val = Number(n || 0);
-  return val.toLocaleString("en-US", { maximumFractionDigits: 0 }) + " AED";
+  return val.toLocaleString("en-US", { maximumFractionDigits: 0 }) + " Сум";
 }
 
 function safeStr(v){ return (v ?? "").toString().trim(); }

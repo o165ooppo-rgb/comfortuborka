@@ -11,6 +11,11 @@
   --shadow: 0 10px 30px rgba(15, 23, 42, .10);
   --shadow2: 0 6px 18px rgba(15, 23, 42, .10);
   --radius: 16px;
+
+  /* Accountant (PRO) */
+  --success:#22c55e;
+  --danger2:#ef4444;
+  --blue:#0b66ff;
 }
 
 *{ margin:0; padding:0; box-sizing:border-box; }
@@ -563,138 +568,277 @@ body{
   }
 }
 
+/* =========================================================
+   Accountant (PRO Dashboard)
+   Заменяет старый "детский" блок бухгалтерии.
+   Подходит под accountant.html / accountant.js (dashboard).
+========================================================= */
 
-/* ===== Accountant ===== */
-.accountant-section {
-  max-width: 1200px;
+/* layout */
+.accountant-shell{
+  max-width: 1400px;
   margin: 0 auto;
-  padding: 24px 16px 60px;
+  padding: 18px 16px 60px;
+  display:grid;
+  grid-template-columns: 360px 1fr;
+  gap: 16px;
+}
+
+.finance-panel{
+  position: sticky;
+  top: 86px;
+  align-self: start;
+  background: rgba(255,255,255,.92);
+  border: 1px solid rgba(15,23,42,.06);
+  border-radius: calc(var(--radius) + 2px);
+  box-shadow: var(--shadow2);
+  padding: 16px;
+}
+
+.panel-head h2{ font-size: 18px; }
+.panel-head p{ margin-top:6px; }
+
+.panel-block{
+  margin-top: 14px;
+  padding-top: 14px;
+  border-top: 1px solid rgba(15,23,42,.06);
+}
+
+.field-label{
+  display:block;
+  font-size: 12px;
+  font-weight: 900;
+  color: rgba(15,23,42,.72);
+  margin-bottom: 6px;
+  letter-spacing: .2px;
+}
+
+.field{
+  width:100%;
+  padding: 12px 12px;
+  border-radius: 12px;
+  border: 1px solid rgba(15,23,42,.12);
+  background: rgba(255,255,255,.95);
+  outline:none;
+  font-weight:700;
+}
+
+.segmented{
+  display:flex;
+  flex-wrap: wrap;
+  gap:8px;
+}
+.seg-btn{
+  padding: 10px 12px;
+  border-radius: 999px;
+  border: 1px solid rgba(15,23,42,.12);
+  background: rgba(255,255,255,.78);
+  font-weight: 900;
+  cursor:pointer;
+}
+.seg-btn.active{
+  border-color: rgba(11,102,255,.35);
+  background: rgba(11,102,255,.10);
+  color: #073e9a;
+}
+
+.panel-actions{
+  display:grid;
+  gap:10px;
+  margin-top: 14px;
+}
+.panel-actions .primary{
+  width:100%;
+  background: linear-gradient(135deg, var(--blue), #0047ff);
+  box-shadow: 0 10px 22px rgba(11,102,255,.18);
+}
+.panel-actions .secondary{
+  width:100%;
+  padding:14px 16px;
+  border:none;
+  border-radius: 999px;
+  background: rgba(15,23,42,.08);
+  color: var(--text);
+  font-weight:800;
+  cursor:pointer;
+}
+.panel-actions .ghost{
+  width:100%;
+  padding:14px 16px;
+  border-radius:999px;
+  border:1px solid rgba(15,23,42,.12);
+  background: rgba(255,255,255,.70);
+  font-weight:800;
+  cursor:pointer;
+}
+
+.panel-note{
+  margin-top: 14px;
+  padding: 12px;
+  border-radius: 14px;
+  background: rgba(253,181,0,.10);
+  border: 1px solid rgba(253,181,0,.18);
+}
+.note-title{ font-weight: 900; }
+.note-text{ margin-top:4px; color: rgba(15,23,42,.72); font-weight:700; }
+
+.finance-main{
+  display:grid;
+  gap: 16px;
 }
 
 /* KPI */
-.finance-kpi {
+.kpi-grid{
   display:grid;
-  grid-template-columns: repeat(3,1fr);
-  gap:16px;
-  margin-bottom:24px;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
 }
 
-.kpi-card {
-  background:white;
-  border-radius:16px;
-  padding:20px;
-  box-shadow:0 10px 25px rgba(0,0,0,.08);
+.kpi{
+  background: rgba(255,255,255,.92);
+  border: 1px solid rgba(15,23,42,.06);
+  border-radius: calc(var(--radius) + 2px);
+  box-shadow: var(--shadow2);
+  padding: 16px;
+}
+.kpi-label{
+  font-size: 12px;
+  font-weight: 900;
+  color: rgba(15,23,42,.62);
+}
+.kpi-value{
+  margin-top: 8px;
+  font-size: 24px;
+  font-weight: 1000;
+  letter-spacing: .2px;
+}
+.kpi-sub{
+  margin-top: 6px;
+  font-size: 12px;
+  color: rgba(15,23,42,.62);
+  font-weight: 800;
 }
 
-.kpi-card h3 {
-  font-size:14px;
-  color:#64748b;
+.kpi-income .kpi-value{ color: var(--success); }
+.kpi-expense .kpi-value{ color: var(--danger2); }
+.kpi-profit .kpi-value{ color: var(--blue); }
+.kpi-cash .kpi-value{ color: rgba(15,23,42,.92); }
+
+/* cards inside accountant */
+.card{
+  background: rgba(255,255,255,.92);
+  border: 1px solid rgba(15,23,42,.06);
+  border-radius: calc(var(--radius) + 2px);
+  box-shadow: var(--shadow2);
+}
+.card-head{
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-start;
+  gap:12px;
+  padding: 16px 16px 10px;
+}
+.card-head h3{ font-size:16px; }
+.card-body{ padding: 12px 16px 16px; }
+
+.chart-grid{
+  display:grid;
+  grid-template-columns: 1.6fr 1fr;
+  gap: 16px;
 }
 
-.kpi-card p {
-  font-size:26px;
-  font-weight:900;
-  margin-top:6px;
+/* chart heights */
+#chartTrend{ height: 320px !important; }
+#chartDonut{ height: 320px !important; }
+#chartBars{ height: 280px !important; }
+
+.mini-select{ width: 180px; }
+
+/* form layout */
+.form-grid{
+  display:grid;
+  grid-template-columns: repeat(4, minmax(0,1fr));
+  gap: 12px;
 }
+.form-grid .span-2{ grid-column: span 2; }
 
-.kpi-card.income p { color:#22c55e; }
-.kpi-card.expense p { color:#ef4444; }
-.kpi-card.profit p { color:#0b66ff; }
-
-/* Filters */
-.finance-filters {
+.form-actions{
+  margin-top: 12px;
   display:flex;
   gap:10px;
-  flex-wrap:wrap;
-  margin-bottom:24px;
+  flex-wrap: wrap;
 }
+.form-actions .primary{ width:auto; }
+.form-actions .secondary{ width:auto; padding:12px 14px; }
 
-.finance-filters input,
-.finance-filters select,
-.finance-filters button {
-  padding:10px 14px;
-  border-radius:12px;
-  border:1px solid rgba(0,0,0,.15);
-}
-
-.finance-filters button {
-  background:#0b66ff;
-  color:white;
-  border:none;
-  cursor:pointer;
-}
-
-.finance-filters .secondary {
-  background:#e5e7eb;
-  color:#111;
-}
-
-/* Form */
-.finance-form {
-  background:white;
-  border-radius:16px;
-  padding:20px;
-  box-shadow:0 10px 25px rgba(0,0,0,.08);
-  margin-bottom:30px;
-}
-
-.finance-form h2 {
-  margin-bottom:14px;
-}
-
-.finance-form select,
-.finance-form input,
-.finance-form button {
+/* table */
+.table-wrap{
   width:100%;
-  padding:12px;
-  margin-bottom:10px;
-  border-radius:12px;
-  border:1px solid rgba(0,0,0,.15);
+  overflow:auto;
+  border-radius: 14px;
+  border: 1px solid rgba(15,23,42,.06);
 }
 
-.finance-form button {
-  background:#0b66ff;
-  color:white;
-  border:none;
-  font-weight:700;
-  cursor:pointer;
-}
-
-/* Chart */
-.finance-chart {
-  background:white;
-  border-radius:16px;
-  padding:20px;
-  box-shadow:0 10px 25px rgba(0,0,0,.08);
-  margin-bottom:30px;
-}
-
-/* Table */
-.finance-table table {
+.tx-table{
   width:100%;
-  border-collapse:collapse;
+  border-collapse: collapse;
+  min-width: 980px;
+  background: rgba(255,255,255,.98);
+}
+.tx-table th{
+  text-align:left;
+  font-size: 12px;
+  padding: 12px;
+  color: rgba(15,23,42,.65);
+  border-bottom: 1px solid rgba(15,23,42,.06);
+  background: rgba(15,23,42,.02);
+}
+.tx-table td{
+  padding: 12px;
+  border-bottom: 1px solid rgba(15,23,42,.06);
+  vertical-align: top;
 }
 
-.finance-table th,
-.finance-table td {
-  padding:12px;
-  border-bottom:1px solid #e5e7eb;
+.tag{
+  display:inline-flex;
+  padding: 6px 10px;
+  border-radius: 999px;
+  font-weight: 1000;
+  font-size: 11px;
+  letter-spacing: .2px;
 }
+.tag-income{ background: rgba(34,197,94,.12); color: rgba(10,90,42,.95); border:1px solid rgba(34,197,94,.22); }
+.tag-expense{ background: rgba(239,68,68,.10); color: rgba(127,16,16,.95); border:1px solid rgba(239,68,68,.20); }
 
-.finance-table td.income { color:#22c55e; font-weight:700; }
-.finance-table td.expense { color:#ef4444; font-weight:700; }
+.amount{ font-weight: 1000; }
+.amt-income{ color: var(--success); }
+.amt-expense{ color: var(--danger2); }
 
-.finance-table button {
-  background:none;
-  border:none;
-  color:#ef4444;
+.note-main{ font-weight: 900; }
+.note-sub{ margin-top:4px; color: rgba(15,23,42,.55); font-weight: 900; font-size: 12px; }
+
+.tx-actions{ width: 56px; text-align:right; }
+.icon-btn{
+  width: 34px;
+  height: 34px;
+  border-radius: 12px;
+  border: 1px solid rgba(15,23,42,.10);
+  background: rgba(255,255,255,.85);
   cursor:pointer;
-  font-size:16px;
+  font-weight: 1000;
+}
+.icon-btn:hover{ background: rgba(239,68,68,.10); border-color: rgba(239,68,68,.25); }
+
+/* responsive accountant */
+@media (max-width: 1100px){
+  .accountant-shell{ grid-template-columns: 1fr; }
+  .finance-panel{ position: relative; top:0; }
+  .kpi-grid{ grid-template-columns: repeat(2, minmax(0,1fr)); }
+  .chart-grid{ grid-template-columns: 1fr; }
+  .form-grid{ grid-template-columns: repeat(2, minmax(0,1fr)); }
+  .form-grid .span-2{ grid-column: span 2; }
 }
 
-/* Mobile */
-@media(max-width:768px){
-  .finance-kpi {
-    grid-template-columns:1fr;
-  }
+@media (max-width: 768px){
+  .kpi-grid{ grid-template-columns: 1fr; }
 }

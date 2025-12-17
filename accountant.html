@@ -1,92 +1,258 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8">
-  <title>Бухгалтерия</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Бухгалтерия — Dashboard</title>
 
   <!-- Chart.js -->
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 
-  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
 
 <header class="navbar">
   <div class="nav-left">
-    <h1 style="font-size:16px;">Бухгалтерия</h1>
-    <span class="muted" style="color:#e5e7eb;">Финансовая аналитика</span>
+    <div class="call-center">Finance Dashboard</div>
+    <div class="muted" style="color:#e5e7eb;">Доходы • Расходы • Прибыль</div>
   </div>
+
+  <div class="nav-center">
+    <img class="header-logo" src="logo.png" alt="Logo" onerror="this.style.display='none'">
+  </div>
+
   <div class="nav-right">
-    <button class="nav-button nav-button-dark" onclick="goHome()">Главная</button>
+    <button class="nav-button nav-button-dark" onclick="location.href='index.html'">
+      ← Главная
+    </button>
   </div>
 </header>
 
-<section class="accountant-section">
-
-  <!-- KPI -->
-  <div class="finance-kpi">
-    <div class="kpi-card income">
-      <h3>Доход</h3>
-      <p id="totalIncome">0</p>
+<section class="accountant-shell">
+  <!-- Left: Controls -->
+  <aside class="finance-panel">
+    <div class="panel-head">
+      <h2>Фильтры</h2>
+      <p class="muted">Быстро находи операции и смотри аналитику.</p>
     </div>
-    <div class="kpi-card expense">
-      <h3>Расход</h3>
-      <p id="totalExpense">0</p>
+
+    <div class="panel-block">
+      <label class="field-label">Период</label>
+      <div class="segmented">
+        <button class="seg-btn active" data-preset="7">7 дней</button>
+        <button class="seg-btn" data-preset="30">30 дней</button>
+        <button class="seg-btn" data-preset="90">90 дней</button>
+        <button class="seg-btn" data-preset="this_month">Этот месяц</button>
+      </div>
+
+      <div class="grid-2 mt-10">
+        <div>
+          <label class="field-label">С</label>
+          <input class="field" type="date" id="fromDate">
+        </div>
+        <div>
+          <label class="field-label">По</label>
+          <input class="field" type="date" id="toDate">
+        </div>
+      </div>
     </div>
-    <div class="kpi-card profit">
-      <h3>Прибыль</h3>
-      <p id="totalProfit">0</p>
+
+    <div class="panel-block">
+      <label class="field-label">Тип</label>
+      <select class="field" id="typeFilter">
+        <option value="all">Все</option>
+        <option value="income">Доход</option>
+        <option value="expense">Расход</option>
+      </select>
+
+      <label class="field-label mt-10">Категория</label>
+      <select class="field" id="categoryFilter">
+        <option value="all">Все</option>
+      </select>
+
+      <label class="field-label mt-10">Поиск</label>
+      <input class="field" id="searchFilter" placeholder="Клиент, описание, тэг..." />
     </div>
-  </div>
 
-  <!-- Filters -->
-  <div class="finance-filters">
-    <input type="date" id="fromDate">
-    <input type="date" id="toDate">
-    <select id="typeFilter">
-      <option value="all">Все</option>
-      <option value="income">Доход</option>
-      <option value="expense">Расход</option>
-    </select>
-    <button onclick="applyFilters()">Фильтр</button>
-    <button onclick="resetFilters()" class="secondary">Сброс</button>
-  </div>
+    <div class="panel-actions">
+      <button class="primary" id="applyBtn">Применить</button>
+      <button class="secondary" id="resetBtn">Сброс</button>
+      <button class="ghost" id="exportBtn">Экспорт CSV</button>
+    </div>
 
-  <!-- Add transaction -->
-  <div class="finance-form">
-    <h2>Добавить операцию</h2>
-    <select id="transactionType">
-      <option value="income">Доход</option>
-      <option value="expense">Расход</option>
-    </select>
-    <input type="number" id="amount" placeholder="Сумма">
-    <input type="text" id="description" placeholder="Описание">
-    <button onclick="addTransaction()">Добавить</button>
-  </div>
+    <div class="panel-note">
+      <div class="note-title">Подсказка</div>
+      <div class="note-text">Добавь категории — графики станут максимально понятными.</div>
+    </div>
+  </aside>
 
-  <!-- Chart -->
-  <div class="finance-chart">
-    <canvas id="financeChart"></canvas>
-  </div>
+  <!-- Right: Dashboard -->
+  <main class="finance-main">
 
-  <!-- Table -->
-  <div class="finance-table">
-    <h2>История операций</h2>
-    <table>
-      <thead>
-        <tr>
-          <th>Дата</th>
-          <th>Тип</th>
-          <th>Сумма</th>
-          <th>Описание</th>
-          <th></th>
-        </tr>
-      </thead>
-      <tbody id="transactionTable"></tbody>
-    </table>
-  </div>
+    <!-- KPI -->
+    <section class="kpi-grid">
+      <div class="kpi kpi-income">
+        <div class="kpi-label">Доход</div>
+        <div class="kpi-value" id="kpiIncome">0</div>
+        <div class="kpi-sub" id="kpiIncomeSub">—</div>
+      </div>
+      <div class="kpi kpi-expense">
+        <div class="kpi-label">Расход</div>
+        <div class="kpi-value" id="kpiExpense">0</div>
+        <div class="kpi-sub" id="kpiExpenseSub">—</div>
+      </div>
+      <div class="kpi kpi-profit">
+        <div class="kpi-label">Прибыль</div>
+        <div class="kpi-value" id="kpiProfit">0</div>
+        <div class="kpi-sub" id="kpiProfitSub">Маржа: —</div>
+      </div>
+      <div class="kpi kpi-cash">
+        <div class="kpi-label">Операций</div>
+        <div class="kpi-value" id="kpiCount">0</div>
+        <div class="kpi-sub" id="kpiAvg">Средний чек: —</div>
+      </div>
+    </section>
 
+    <!-- Charts row -->
+    <section class="chart-grid">
+      <div class="card">
+        <div class="card-head">
+          <div>
+            <h3>Динамика</h3>
+            <p class="muted">Доход / Расход / Прибыль по дням</p>
+          </div>
+          <div class="mini-select">
+            <select class="field" id="bucket">
+              <option value="day">День</option>
+              <option value="week">Неделя</option>
+              <option value="month">Месяц</option>
+            </select>
+          </div>
+        </div>
+        <div class="card-body">
+          <canvas id="chartTrend"></canvas>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-head">
+          <div>
+            <h3>Структура расходов</h3>
+            <p class="muted">Топ категорий</p>
+          </div>
+        </div>
+        <div class="card-body">
+          <canvas id="chartDonut"></canvas>
+        </div>
+      </div>
+    </section>
+
+    <section class="card">
+      <div class="card-head">
+        <div>
+          <h3>Категории (Доход vs Расход)</h3>
+          <p class="muted">Понятно, куда уходят деньги и что приносит прибыль</p>
+        </div>
+      </div>
+      <div class="card-body">
+        <canvas id="chartBars"></canvas>
+      </div>
+    </section>
+
+    <!-- Add transaction -->
+    <section class="card">
+      <div class="card-head">
+        <div>
+          <h3>Добавить операцию</h3>
+          <p class="muted">Все сохраняется в браузере (localStorage)</p>
+        </div>
+      </div>
+
+      <div class="card-body">
+        <div class="form-grid">
+          <div>
+            <label class="field-label">Тип</label>
+            <select class="field" id="txType">
+              <option value="income">Доход</option>
+              <option value="expense">Расход</option>
+            </select>
+          </div>
+
+          <div>
+            <label class="field-label">Категория</label>
+            <select class="field" id="txCategory"></select>
+          </div>
+
+          <div>
+            <label class="field-label">Сумма</label>
+            <input class="field" id="txAmount" type="number" placeholder="Например: 350" />
+          </div>
+
+          <div>
+            <label class="field-label">Дата</label>
+            <input class="field" id="txDate" type="date" />
+          </div>
+
+          <div class="span-2">
+            <label class="field-label">Клиент / Описание</label>
+            <input class="field" id="txNote" placeholder="Например: Villa 14 — deep cleaning (Client: Alex)" />
+          </div>
+
+          <div>
+            <label class="field-label">Метод</label>
+            <select class="field" id="txMethod">
+              <option value="cash">Наличные</option>
+              <option value="card">Карта</option>
+              <option value="bank">Банк</option>
+              <option value="tabby">Tabby</option>
+              <option value="other">Другое</option>
+            </select>
+          </div>
+
+          <div>
+            <label class="field-label">Тэг</label>
+            <input class="field" id="txTag" placeholder="например: urgent / vip" />
+          </div>
+        </div>
+
+        <div class="form-actions">
+          <button class="primary" id="addBtn">Добавить</button>
+          <button class="secondary" id="demoBtn">Добавить пример</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Table -->
+    <section class="card">
+      <div class="card-head">
+        <div>
+          <h3>Операции</h3>
+          <p class="muted">Фильтруй слева — таблица и графики обновляются</p>
+        </div>
+      </div>
+
+      <div class="card-body">
+        <div class="table-wrap">
+          <table class="tx-table">
+            <thead>
+              <tr>
+                <th>Дата</th>
+                <th>Тип</th>
+                <th>Категория</th>
+                <th>Сумма</th>
+                <th>Метод</th>
+                <th>Описание</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody id="txTable"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+  </main>
 </section>
 
 <script src="accountant.js"></script>
